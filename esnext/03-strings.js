@@ -9,9 +9,10 @@ They are multiline too!
 We can interpolate JS ${"expressions".toUpperCase()}!`;
 console.log(templateLiteral);
 
+const who = "world";
 const html = `
 <p class="paragraph">
-  hello world!
+  hello '${who.toUpperCase()}'!
 </p>`;
 console.log(html);
 
@@ -34,3 +35,5 @@ console.log(url);
 const changedUrl = url.slice(0, 2) + "x" + url.slice(3);
 const betterChangedUrl = `${url.slice(0, 2)}x${url.slice(3)}`;
 console.log(url, changedUrl, betterChangedUrl);
+
+console.log(url.slice(0, url.length), url.slice(0));

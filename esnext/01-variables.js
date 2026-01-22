@@ -91,8 +91,8 @@ for (let i = 0; i < 5; i++) {
   console.log(i);
 }
 
-const DAYS_IN_A_WEEK = 5;
-for (let i = 0; i < DAYS_IN_A_WEEK; i++) {
+const WORKING_DAYS_IN_A_WEEK = 5;
+for (let i = 0; i < WORKING_DAYS_IN_A_WEEK; i++) {
   console.log(i);
 }
 
