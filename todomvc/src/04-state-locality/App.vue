@@ -6,22 +6,6 @@ import AppForm from './AppForm.vue'
 import AppHeader from './AppHeader.vue'
 import AppList from './AppList.vue'
 
-// form logic
-const text = ref('')
-
-function handleChange(value) {
-  text.value = value
-}
-
-function handleSubmit() {
-  add()
-  emptyText()
-}
-
-function emptyText() {
-  text.value = ''
-}
-
 // list logic
 const tasks = ref([
   { id: 1, text: 'Learn Vue', completed: true },
@@ -35,9 +19,9 @@ const filteredTasks = computed(() => {
   return tasks.value
 })
 
-function add() {
+function add(value) {
   const maxId = tasks.value.length ? tasks.value[tasks.value.length - 1].id : 0
-  tasks.value.push({ id: maxId + 1, text: text.value })
+  tasks.value.push({ id: maxId + 1, text: value })
 }
 
 function toggle(index) {
@@ -80,7 +64,7 @@ onUpdated(() => {
 <template>
   <AppHeader name="Matteo Antony" />
 
-  <AppForm :text="text" @change="handleChange" @submit="handleSubmit" />
+  <AppForm @formSubmit="add" />
 
   <AppList :tasks="filteredTasks" @spanClick="toggle" @buttonClick="remove" />
 

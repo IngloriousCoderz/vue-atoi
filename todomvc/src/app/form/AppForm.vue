@@ -1,13 +1,13 @@
 <script setup>
-import { ref } from 'vue'
+import { useList } from '../list/list'
+import { useForm } from './form'
 
-const emit = defineEmits(['formSubmit'])
-
-const text = ref('')
+const { text, empty } = useForm()
+const { add } = useList()
 
 function handleSubmit() {
-  emit('formSubmit', text.value)
-  text.value = ''
+  add(text.value)
+  empty()
 }
 </script>
 
