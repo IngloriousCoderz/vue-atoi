@@ -1,10 +1,10 @@
 <script setup>
 import { ref, computed, onMounted, onUpdated } from 'vue'
 
-import AppFooter from './footer/AppFooter.vue'
-import AppForm from './form/AppForm.vue'
-import AppHeader from './header/AppHeader.vue'
-import AppList from './list/AppList.vue'
+import AppFooter from './AppFooter.vue'
+import AppForm from './AppForm.vue'
+import AppHeader from './AppHeader.vue'
+import AppList from './AppList.vue'
 
 // list logic
 const tasks = ref([
