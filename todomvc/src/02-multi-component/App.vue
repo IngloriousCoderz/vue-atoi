@@ -1,5 +1,12 @@
 <script>
+import AppFooter from './AppFooter.vue'
+import AppForm from './AppForm.vue'
+import AppHeader from './AppHeader.vue'
+import AppList from './AppList.vue'
+
 export default {
+  components: { AppHeader, AppForm, AppList, AppFooter },
+
   data() {
     return {
       // form data
@@ -95,68 +102,17 @@ export default {
 </script>
 
 <template>
-  <header>
-    <h1>Matteo Antony's Todo List</h1>
-  </header>
+  <AppHeader name="Matteo Antony" />
 
-  <form @submit.prevent="handleSubmit">
-    <input
-      type="text"
-      placeholder="What next?"
-      autofocus
-      :value="text"
-      @input="handleChange($event.target.value)"
-    />
-    <button :disabled="!text">Add</button>
-  </form>
+  <AppForm :text="text" @inputChange="handleChange" @formSubmit="handleSubmit" />
 
-  <ul>
-    <li v-for="(task, index) of filteredTasks" :key="task.id">
-      <span :class="{ completed: task.completed }" @click="toggle(index)">{{ task.text }}</span>
-      &nbsp;
-      <button @click="remove(index)">x</button>
-    </li>
-  </ul>
+  <AppList :tasks="filteredTasks" @spanClick="toggle" @buttonClick="remove" />
 
-  <footer>
-    <span>{{ tasksLeft }} items left</span>
-    <span class="filters">
-      <a :class="{ selected: selectedFilter === 'All' }" @click="setFilter('All')">All</a>
-      <a :class="{ selected: selectedFilter === 'Active' }" @click="setFilter('Active')">Active</a>
-      <a :class="{ selected: selectedFilter === 'Completed' }" @click="setFilter('Completed')"
-        >Completed</a
-      >
-    </span>
-    <a :class="{ hidden: !isClearCompletedShown }" @click="clearCompleted">Clear completed</a>
-  </footer>
+  <AppFooter
+    :tasksLeft="tasksLeft"
+    :selectedFilter="selectedFilter"
+    :isClearCompletedShown="isClearCompletedShown"
+    @filterClick="setFilter"
+    @clearClick="clearCompleted"
+  />
 </template>
-
-<style scoped>
-.completed {
-  text-decoration: line-through;
-  opacity: 0.5;
-}
-
-footer {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-a {
-  padding: 0.25rem 0.5rem;
-}
-
-.filters {
-  display: flex;
-  gap: 1rem;
-}
-
-.selected {
-  border: 1px solid red;
-}
-
-.hidden {
-  visibility: hidden;
-}
-</style>

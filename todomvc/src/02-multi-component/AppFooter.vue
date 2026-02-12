@@ -1,23 +1,26 @@
-<script setup>
-defineProps(['tasksLeft', 'selectedFilter', 'isClearCompletedShown'])
-const emit = defineEmits(['filterClick', 'clearClick'])
+<script>
+export default {
+  props: ['tasksLeft', 'selectedFilter', 'isClearCompletedShown'],
+}
 </script>
 
 <template>
   <footer>
     <span>{{ tasksLeft }} items left</span>
     <span class="filters">
-      <a :class="{ selected: selectedFilter === 'All' }" @click="emit('filterClick', 'All')">All</a>
-      <a :class="{ selected: selectedFilter === 'Active' }" @click="emit('filterClick', 'Active')"
+      <a :class="{ selected: selectedFilter === 'All' }" @click="$emit('filterClick', 'All')"
+        >All</a
+      >
+      <a :class="{ selected: selectedFilter === 'Active' }" @click="$emit('filterClick', 'Active')"
         >Active</a
       >
       <a
         :class="{ selected: selectedFilter === 'Completed' }"
-        @click="emit('filterClick', 'Completed')"
+        @click="$emit('filterClick', 'Completed')"
         >Completed</a
       >
     </span>
-    <a :class="{ hidden: !isClearCompletedShown }" @click="emit('clearClick')">Clear completed</a>
+    <a :class="{ hidden: !isClearCompletedShown }" @click="$emit('clearClick')">Clear completed</a>
   </footer>
 </template>
 

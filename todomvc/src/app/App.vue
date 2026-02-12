@@ -1,106 +1,80 @@
-<script>
+<script setup>
+import { ref, computed, onMounted, onUpdated } from 'vue'
+
 import AppFooter from './AppFooter.vue'
 import AppForm from './AppForm.vue'
 import AppHeader from './AppHeader.vue'
 import AppList from './AppList.vue'
 
-export default {
-  components: { AppHeader, AppForm, AppList, AppFooter },
+// form logic
+const text = ref('')
 
-  data() {
-    return {
-      // form data
-      text: '',
-
-      // list data
-      tasks: [
-        { id: 1, text: 'Learn Vue', completed: true },
-        { id: 2, text: 'Look for a job', completed: false },
-        { id: 3, text: 'Forget everything' },
-      ],
-
-      // filter data
-      selectedFilter: 'All',
-    }
-  },
-
-  computed: {
-    // filter computed data
-    activeTasks() {
-      return this.tasks.filter((task) => !task.completed)
-    },
-
-    completedTasks() {
-      return this.tasks.filter((task) => task.completed)
-    },
-
-    tasksLeft() {
-      return this.activeTasks.length
-    },
-
-    isClearCompletedShown() {
-      return this.completedTasks.length
-    },
-
-    // list computed data
-    filteredTasks() {
-      if (this.selectedFilter === 'Active') return this.activeTasks
-      if (this.selectedFilter === 'Completed') return this.completedTasks
-      return this.tasks
-    },
-  },
-
-  methods: {
-    // form methods
-    handleChange(value) {
-      this.text = value
-    },
-
-    handleSubmit() {
-      this.add()
-      this.emptyText()
-    },
-
-    emptyText() {
-      this.text = ''
-    },
-
-    // list methods
-    add() {
-      const maxId = this.tasks.length ? this.tasks[this.tasks.length - 1].id : 0
-      this.tasks.push({ id: maxId + 1, text: this.text })
-    },
-
-    toggle(index) {
-      const task = this.tasks[index]
-      task.completed = !task.completed
-    },
-
-    remove(index) {
-      this.tasks.splice(index, 1)
-    },
-
-    // filter methods
-    setFilter(value) {
-      this.selectedFilter = value
-    },
-
-    clearCompleted() {
-      this.completedTasks.forEach((_, index) => {
-        this.remove(index)
-      })
-      this.selectedFilter = 'All'
-    },
-  },
-
-  mounted() {
-    console.log('App mounted!')
-  },
-
-  updated() {
-    console.log('App updated!')
-  },
+function handleChange(value) {
+  text.value = value
 }
+
+function handleSubmit() {
+  add()
+  emptyText()
+}
+
+function emptyText() {
+  text.value = ''
+}
+
+// list logic
+const tasks = ref([
+  { id: 1, text: 'Learn Vue', completed: true },
+  { id: 2, text: 'Look for a job', completed: false },
+  { id: 3, text: 'Forget everything' },
+])
+
+const filteredTasks = computed(() => {
+  if (selectedFilter.value === 'Active') return activeTasks.value
+  if (selectedFilter.value === 'Completed') return completedTasks.value
+  return tasks.value
+})
+
+function add() {
+  const maxId = tasks.value.length ? tasks.value[tasks.value.length - 1].id : 0
+  tasks.value.push({ id: maxId + 1, text: text.value })
+}
+
+function toggle(index) {
+  const task = tasks.value[index]
+  task.completed = !task.completed
+}
+
+function remove(index) {
+  tasks.value.splice(index, 1)
+}
+
+// filter logic
+const selectedFilter = ref('All')
+
+const activeTasks = computed(() => tasks.value.filter((task) => !task.completed))
+const completedTasks = computed(() => tasks.value.filter((task) => task.completed))
+const tasksLeft = computed(() => activeTasks.value.length)
+const isClearCompletedShown = computed(() => completedTasks.value.length)
+
+function setFilter(value) {
+  selectedFilter.value = value
+}
+
+function clearCompleted() {
+  tasks.value = tasks.value.filter((task) => !task.completed)
+  selectedFilter.value = 'All'
+}
+
+// lifecycle methods
+
+onMounted(() => {
+  console.log('App mounted!')
+})
+
+onUpdated(() => {
+  console.log('App updated!')
+})
 </script>
 
 <template>
