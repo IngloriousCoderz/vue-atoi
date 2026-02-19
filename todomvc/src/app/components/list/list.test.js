@@ -1,52 +1,65 @@
-import { beforeEach, describe, expect, it } from 'vitest'
 import { createPinia, setActivePinia } from 'pinia'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 
+import * as api from '../../services/api'
 import { useListStore } from './list'
 
-describe('useListStore', () => {
+vi.mock('../../services/api', () => ({
+  fetchTasks: vi.fn(),
+  addTask: vi.fn(),
+  replaceTask: vi.fn(),
+  updateTask: vi.fn(),
+  removeTask: vi.fn(),
+}))
+
+describe('List store', () => {
+  const mockTasks = [
+    { id: 1, text: 'Learn Vue', completed: true },
+    { id: 2, text: 'Look for a job', completed: false },
+    { id: 3, text: 'Forget everything' },
+  ]
+  let store = null
+
   beforeEach(async () => {
     setActivePinia(createPinia())
+    vi.clearAllMocks()
+
+    api.fetchTasks.mockResolvedValue(JSON.parse(JSON.stringify(mockTasks)))
+    store = useListStore()
+    await store.fetch()
   })
 
-  it('starts with default tasks', () => {
-    const store = useListStore()
-
+  it('fetches tasks on initialization', async () => {
     expect(store.tasks).toHaveLength(3)
+    expect(api.fetchTasks).toHaveBeenCalledTimes(1)
   })
 
-  it('adds a task', () => {
-    const store = useListStore()
+  it('adds a task', async () => {
+    const newTask = { id: 4, text: 'New Task', completed: false }
+    api.addTask.mockResolvedValue(newTask)
 
-    store.add('New task')
+    await store.add('New Task')
 
-    // expect(tasks.value).toHaveLength(4)
-    // expect(tasks.value.at(-1).text).toBe('New task')
-
-    expect(store.tasks).toEqual([
-      { id: 1, text: 'Learn Vue', completed: true },
-      { id: 2, text: 'Look for a job', completed: false },
-      { id: 3, text: 'Forget everything' },
-      { id: 4, text: 'New task' },
-    ])
-
-    // snapshot testing
-    // expect(tasks.value).toMatchSnapshot()
+    expect(store.tasks.at(-1)).toEqual(newTask)
+    expect(api.addTask).toHaveBeenCalledWith('New Task')
   })
 
-  it('toggles completion', () => {
-    const store = useListStore()
-    const initial = store.tasks[1].completed
+  it('toggles task completion', async () => {
+    const updatedTask = { ...mockTasks[1], completed: true }
+    api.updateTask.mockResolvedValue(updatedTask)
 
-    store.toggle(1)
+    await store.toggle(1)
 
-    expect(store.tasks[1].completed).toBe(!initial)
+    expect(store.tasks[1].completed).toBe(true)
+    expect(api.updateTask).toHaveBeenCalledWith(2, { completed: true })
   })
 
-  it('removes a task', () => {
-    const store = useListStore()
+  it('removes a task', async () => {
+    api.removeTask.mockResolvedValue({})
 
-    store.remove(0)
+    await store.remove(0)
 
     expect(store.tasks).toHaveLength(2)
+    expect(api.removeTask).toHaveBeenCalledWith(1)
   })
 })

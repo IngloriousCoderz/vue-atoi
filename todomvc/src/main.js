@@ -8,3 +8,5 @@ const app = createApp(App)
 app.use(createPinia())
 
 app.mount('#app')
+
+// import './00-default-app/main'
