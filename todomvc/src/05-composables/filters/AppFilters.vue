@@ -1,10 +1,7 @@
 <script setup>
-import { storeToRefs } from 'pinia'
-import { useFiltersStore } from './filters'
+import { useFilters } from './filters'
 
-const filters = useFiltersStore()
-const { selectedFilter, tasksLeft, isClearCompletedShown } = storeToRefs(filters)
-const { setFilter, clearCompleted } = filters
+const { selectedFilter, tasksLeft, isClearCompletedShown, setFilter, clearCompleted } = useFilters()
 </script>
 
 <template>

@@ -1,48 +1,48 @@
+import { createPinia } from 'pinia'
+import { setActivePinia } from 'pinia'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { useFiltersStore } from './filters'
 
-describe('useFilters', () => {
-  let composable = null
-
+describe('useFiltersStore', () => {
   beforeEach(async () => {
-    vi.resetModules()
-    const { useFilters } = await import('./filters')
-    composable = useFilters
+    setActivePinia(createPinia())
   })
 
   it('computes tasksLeft correctly', () => {
-    const { tasksLeft } = composable()
-    expect(tasksLeft.value).toBe(2)
+    const store = useFiltersStore()
+
+    expect(store.tasksLeft).toBe(2)
   })
 
   it('filters active tasks', () => {
-    const { filteredTasks, setFilter } = composable()
+    const store = useFiltersStore()
 
-    setFilter('Active')
+    store.setFilter('Active')
 
-    expect(filteredTasks.value.every((t) => !t.completed)).toBe(true)
+    expect(store.filteredTasks.every((t) => !t.completed)).toBe(true)
   })
 
   it('filters completed tasks', () => {
-    const { filteredTasks, setFilter } = composable()
+    const store = useFiltersStore()
 
-    setFilter('Completed')
+    store.setFilter('Completed')
 
-    expect(filteredTasks.value.every((t) => t.completed)).toBe(true)
+    expect(store.filteredTasks.every((t) => t.completed)).toBe(true)
   })
 
   it('shows clear completed only when needed', () => {
-    const { isClearCompletedShown } = composable()
+    const store = useFiltersStore()
 
-    expect(isClearCompletedShown.value).toBe(true)
+    expect(store.isClearCompletedShown).toBe(true)
   })
 
   it('clears completed tasks and resets filter', () => {
-    const { filteredTasks, clearCompleted, selectedFilter, setFilter } = composable()
+    const store = useFiltersStore()
 
-    setFilter('Completed')
-    clearCompleted()
+    store.setFilter('Completed')
+    store.clearCompleted()
 
-    expect(selectedFilter.value).toBe('All')
-    expect(filteredTasks.value.every((t) => !t.completed)).toBe(true)
+    expect(store.filteredTasks.every((t) => !t.completed)).toBe(true)
+    expect(store.selectedFilter).toBe('All')
   })
 })

@@ -1,7 +1,6 @@
-import { defineStore } from 'pinia'
 import { ref } from 'vue'
 
-export const useFormStore = defineStore('form', () => {
+export function useForm() {
   const text = ref('')
 
   function empty() {
@@ -9,4 +8,4 @@ export const useFormStore = defineStore('form', () => {
   }
 
   return { text, empty }
-})
+}
